@@ -48,17 +48,17 @@ public class NotesFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
     }
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.add_note:
-               //emptyNotesFragment();
-                return true;
-            case R.id.save_note:
-                setInstance();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.add_note:
+//               //emptyNotesFragment();
+//                return true;
+//            case R.id.save_note:
+//                setInstance();
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -88,5 +88,5 @@ public class NotesFragment extends Fragment {
         note.setBody(editor.getText().toString());
 
     }
-    
+
 }

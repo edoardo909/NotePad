@@ -105,9 +105,9 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
         NotesFragment notesFragment = NotesFragment.getInstance(nota);
         notesFragment.getArguments().clear();
     }
-    private void saveNote(NoteInfo nota){
-        NotesFragment notesFragment = NotesFragment.setInstance();
-
-    }
+//    private void saveNote(NoteInfo nota){
+//        NotesFragment notesFragment = NotesFragment.setInstance();
+//
+//    }
 
 }
