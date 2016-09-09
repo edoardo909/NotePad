@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">NotePad</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_list">ListActivity</string>
+    <string name="nome_lista">Le mie Note</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_note">New</string>
+    <string name="modify_note" >Modify</string>
+    <string name="save_note" >Save</string>
+    <string name="delete_note" >Delete</string>
+</resources>
