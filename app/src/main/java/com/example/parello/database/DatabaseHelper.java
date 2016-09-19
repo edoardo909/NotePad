@@ -21,7 +21,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "NotesDbAdapter";
     private static DatabaseHelper mDbHelper;
 
-    public static final String DATABASE_CREATE ="CREATE TABLE "+DATABASE_TABLE+"(" + KEY_ROWID + " INTEGER PRIMARY KEY, "
+    public static final String DATABASE_CREATE ="CREATE TABLE "+DATABASE_TABLE+"(" + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + KEY_TITLE + " TEXT, " + KEY_BODY + " TEXT)";
 
 

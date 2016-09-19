@@ -1,19 +1,14 @@
 package com.example.parello.fragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.parello.database.DatabaseHandler;
-import com.example.parello.notepad.ListActivity;
 import com.example.parello.notepad.NoteInfo;
 import com.example.parello.notepad.R;
 
@@ -22,13 +17,15 @@ import com.example.parello.notepad.R;
  */
 public class NotesFragment extends Fragment {
 
-    private EditText editor;
-    private NoteInfo note;
+    private EditText bodyEditor;
+    private EditText titleEditor;
+    DatabaseHandler handler;
 
    public static NotesFragment getInstance(NoteInfo nota) {
         NotesFragment fragment = new NotesFragment();
         Bundle args = new Bundle();
         args.putParcelable("nota", nota);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -37,6 +34,7 @@ public class NotesFragment extends Fragment {
         NotesFragment fragment = new NotesFragment();
         Bundle args = new Bundle();
         NoteInfo note = new NoteInfo();
+        note.setTitle("no title");
         note.setBody("nota di prova");
         args.putParcelable("nota", note);
         fragment.setArguments(args);
@@ -46,19 +44,9 @@ public class NotesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        handler = new DatabaseHandler(getActivity());
     }
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.add_note:
-//               //emptyNotesFragment();
-//                return true;
-//            case R.id.save_note:
-//                setInstance();
-//                return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -69,14 +57,15 @@ public class NotesFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View layout = inflater.inflate(R.layout.editor_view, container, false);
-        editor = (EditText) layout.findViewById(R.id.editText);
-
+        bodyEditor = (EditText) layout.findViewById(R.id.note_body);
+        titleEditor = (EditText) layout.findViewById(R.id.note_title);
             if(getArguments().getParcelable("nota") != null) {
                 NoteInfo nota = getArguments().getParcelable("nota");
             if (nota == null) {
                 setNote(nota);
             } else {
-                editor.setText(nota.getTitle());
+                titleEditor.setText(nota.getTitle());
+                bodyEditor.setText(nota.getBody());
              }
             }
         return layout;
@@ -84,8 +73,8 @@ public class NotesFragment extends Fragment {
 
     public void setNote(NoteInfo note){
         note = new NoteInfo();
-        note.setTitle(editor.getText().toString());
-        note.setBody(editor.getText().toString());
+        note.setTitle(bodyEditor.getText().toString());
+        note.setBody(bodyEditor.getText().toString());
 
     }
 

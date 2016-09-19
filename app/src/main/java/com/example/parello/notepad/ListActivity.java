@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CheckBox;
+import android.widget.EditText;
 
 import com.example.parello.database.DatabaseHandler;
 import com.example.parello.database.DatabaseHelper;
@@ -16,6 +18,10 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
 
     private boolean notePage = false;
     private DatabaseHandler handler;
+    private CheckBox checkBox;
+    private EditText bodyEditor;
+    private EditText titleEditor;
+    NoteInfo note = new NoteInfo();
     private boolean isLargeScreen() {
         Fragment listFragment = getFragmentManager().findFragmentById(R.id.displayList);
         return listFragment == null ? false : true;
@@ -35,8 +41,11 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
                 emptyNotesFragment();
                 return true;
             case R.id.save_note:
-               // handler.save();
+                note.describeContents();
+                saveNote(note);
                 return true;
+            case R.id.delete_note:
+                deleteNote(note);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -101,13 +110,23 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
         }
     }
 
-    private void deleteNote(NoteInfo nota) {
-        NotesFragment notesFragment = NotesFragment.getInstance(nota);
-        notesFragment.getArguments().clear();
+    private void startHandler(){
+        handler = new DatabaseHandler(getApplicationContext());
     }
-//    private void saveNote(NoteInfo nota){
-//        NotesFragment notesFragment = NotesFragment.setInstance();
-//
-//    }
 
+    private void saveNote(NoteInfo nota){
+        startHandler();
+        titleEditor = (EditText)findViewById(R.id.note_title);
+        bodyEditor = (EditText)findViewById(R.id.note_body);
+        note.setTitle(titleEditor.getText().toString());
+        note.setBody(bodyEditor.getText().toString());
+        handler.save(nota);
+    }
+
+    private void deleteNote(NoteInfo nota) {
+        startHandler();
+        NotesFragment notesFragment = NotesFragment.getInstance(nota);
+        nota.getIdCode();
+        handler.delete(nota);
+    }
 }

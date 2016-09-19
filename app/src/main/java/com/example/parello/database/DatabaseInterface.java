@@ -9,5 +9,5 @@ import java.util.ArrayList;
  */
 public interface DatabaseInterface {
     public ArrayList<NoteInfo> getAllNotes();
-
+    public void save(NoteInfo noteInfo);
 }

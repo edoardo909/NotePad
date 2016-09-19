@@ -13,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Created by Parello on 08/09/2016.
  */
-public class DatabaseHandler extends NotesInfoDBDAO implements DatabaseInterface {
+public class DatabaseHandler extends NotesInfoDBDAO {
     private static final String WHERE_ID_EQUALS = DatabaseHelper.KEY_ROWID
             + " =?";
 
@@ -32,7 +32,7 @@ public class DatabaseHandler extends NotesInfoDBDAO implements DatabaseInterface
     public NoteInfo getNote(long id){
         NoteInfo noteInfo = null;
         String sql = "SELECT * FROM " + DatabaseHelper.DATABASE_TABLE
-                + " WHERE " + DatabaseHelper.KEY_ROWID + " = ?";
+                + " WHERE " + DatabaseHelper.KEY_ROWID + " =?";
         database.beginTransaction();
         Cursor cursor = database.rawQuery(sql, new String[] { id + "" });
 
@@ -46,7 +46,7 @@ public class DatabaseHandler extends NotesInfoDBDAO implements DatabaseInterface
 
     public ArrayList<NoteInfo> getAllNotes() {
         ArrayList<NoteInfo> notesInfos = new ArrayList<NoteInfo>();
-        String sql = "SELECT * FROM " + DatabaseHelper.DATABASE_TABLE+"=?";
+       // String sql = "SELECT * FROM " + DatabaseHelper.DATABASE_TABLE+"=?";
         //Cursor cursor = database.rawQuery(sql, new String[] { "" });
         Cursor cursor = database.query(DatabaseHelper.DATABASE_TABLE,
                 new String[] { DatabaseHelper.KEY_ROWID,
@@ -78,7 +78,7 @@ public class DatabaseHandler extends NotesInfoDBDAO implements DatabaseInterface
     }
 
     public int delete(NoteInfo noteInfo) {
-        return database.delete(DatabaseHelper.DATABASE_TABLE,null/* WHERE_ID_EQUALS*/,
+        return database.delete(DatabaseHelper.DATABASE_TABLE, WHERE_ID_EQUALS,
                 new String[] { noteInfo.getIdCode() + "" });
     }
 }

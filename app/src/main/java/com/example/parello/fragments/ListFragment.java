@@ -63,7 +63,6 @@ public class ListFragment extends Fragment {
     }
 
     private List<NoteInfo> displayListView(View view) {
-        DatabaseHelper helper = new DatabaseHelper(getActivity());
         listView = (ListView) view.findViewById(R.id.listaDiNote);
 
         List<NoteInfo> notesList = handler.getAllNotes();
@@ -75,6 +74,7 @@ public class ListFragment extends Fragment {
         notesList.add(new NoteInfo("testo di prova"));
         }
         NoteInfo[] noteArray = notesList.toArray(new NoteInfo[notesList.size()]);
+        //List<NoteInfo> noteList = new ArrayList<>();
         //create an ArrayAdaptar from the String Array
         ListAdapter dataAdapter = new ListAdapter(noteArray, getActivity());
         final ListView listView = (ListView) view.findViewById(R.id.listaDiNote);
