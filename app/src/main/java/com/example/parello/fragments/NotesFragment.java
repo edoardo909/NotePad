@@ -17,20 +17,29 @@ import com.example.parello.notepad.R;
  */
 public class NotesFragment extends Fragment {
 
-    private EditText bodyEditor;
-    private EditText titleEditor;
+    private static EditText bodyEditor;
+    private static EditText titleEditor;
     DatabaseHandler handler;
 
    public static NotesFragment getInstance(NoteInfo nota) {
         NotesFragment fragment = new NotesFragment();
         Bundle args = new Bundle();
         args.putParcelable("nota", nota);
-
         fragment.setArguments(args);
         return fragment;
     }
+//    public static NotesFragment setInstance(NoteInfo nota){
+//        NotesFragment fragment = new NotesFragment();
+//        Bundle args = getInstance(nota).getArguments();
+//        nota.setTitle(titleEditor.getText().toString());
+//        nota.setBody(bodyEditor.getText().toString());
+//        args.putParcelable("nota", nota);
+//        fragment.setArguments(args);
+//        return fragment;
+//
+//    }
 
-    public static NotesFragment setInstance(){
+    public static NotesFragment newInstance(){
         NotesFragment fragment = new NotesFragment();
         Bundle args = new Bundle();
         NoteInfo note = new NoteInfo();
@@ -58,7 +67,7 @@ public class NotesFragment extends Fragment {
 
         View layout = inflater.inflate(R.layout.editor_view, container, false);
         bodyEditor = (EditText) layout.findViewById(R.id.note_body);
-        titleEditor = (EditText) layout.findViewById(R.id.note_title);
+        titleEditor = (EditText) layout.findViewById(R.id.editor_note_title);
             if(getArguments().getParcelable("nota") != null) {
                 NoteInfo nota = getArguments().getParcelable("nota");
             if (nota == null) {

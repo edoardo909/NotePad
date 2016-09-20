@@ -7,7 +7,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/note_title"/>
+        android:id="@+id/editor_note_title"/>
 
     <EditText
         android:layout_width="match_parent"

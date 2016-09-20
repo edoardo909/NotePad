@@ -11,6 +11,7 @@ public class NoteInfo implements Parcelable {
     private int idCode;
     private String title;
     private String body;
+    private boolean selected;
 
     private NoteInfo(Parcel in) {
         idCode = in.readInt();
@@ -25,6 +26,7 @@ public class NoteInfo implements Parcelable {
     public NoteInfo(String title) {
         this.title = title;
     }
+
 
 
     public int getIdCode() {
@@ -51,6 +53,13 @@ public class NoteInfo implements Parcelable {
         this.body = body;
     }
 
+    public boolean isSelected(){
+        return selected;
+    }
+    public void setSelected(boolean selected){
+        this.selected = selected;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -59,8 +68,8 @@ public class NoteInfo implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(idCode);
-        dest.writeString(body);
         dest.writeString(title);
+        dest.writeString(body);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

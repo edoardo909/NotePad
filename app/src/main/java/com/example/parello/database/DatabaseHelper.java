@@ -55,46 +55,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-//    public long createNote(String title, String body, String date) {
-//        ContentValues initialValues = new ContentValues();
-//        initialValues.put(KEY_TITLE, title);
-//        initialValues.put(KEY_BODY, body);
-//
-//        return mDb.insert(DATABASE_TABLE, null, initialValues);
-//    }
-//
-//    public boolean deleteNote(long rowId) {
-//
-//        return mDb.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
-//    }
-//
-//    public Cursor fetchAllNotes() {
-//
-//        return mDb.query(DATABASE_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
-//                KEY_BODY}, null, null, null, null, null);
-//    }
-//
-//    public Cursor fetchNote(long rowId) throws SQLException {
-//
-//        Cursor mCursor =
-//
-//                mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
-//                                KEY_TITLE, KEY_BODY}, KEY_ROWID + "=" + rowId, null,
-//                        null, null, null, null);
-//        if (mCursor != null) {
-//            mCursor.moveToFirst();
-//        }
-//        return mCursor;
-//    }
-//
-//    public boolean updateNote(long rowId, String title, String body,String date) {
-//        ContentValues args = new ContentValues();
-//        args.put(KEY_TITLE, title);
-//        args.put(KEY_BODY, body);
-//
-//        //One more parameter is added for data
-//        return mDb.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
-//    }
-
-
 }

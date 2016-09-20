@@ -7,7 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.parello.adapter.ListAdapter;
 import com.example.parello.database.DatabaseHelper;
@@ -17,7 +20,7 @@ import com.example.parello.notepad.ListActivity;
 import com.example.parello.notepad.NoteInfo;
 import com.example.parello.notepad.NoteSelectedListener;
 import com.example.parello.notepad.R;
-
+import com.example.parello.notepad.ListActivity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +34,7 @@ public class ListFragment extends Fragment {
     private ListView listView;
     private NoteInfo noteInfo;
     private DatabaseHelper db;
+    private CheckBox checkBox;
     private DatabaseHandler handler;
 
     @Override
@@ -49,6 +53,7 @@ public class ListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_view, container, false);
         displayListView(view);
+
         return view;
     }
 
@@ -65,7 +70,7 @@ public class ListFragment extends Fragment {
     private List<NoteInfo> displayListView(View view) {
         listView = (ListView) view.findViewById(R.id.listaDiNote);
 
-        List<NoteInfo> notesList = handler.getAllNotes();
+        final List<NoteInfo> notesList = handler.getAllNotes();
 
         if (notesList.isEmpty()) {
         notesList.add(new NoteInfo("database"));
@@ -76,7 +81,7 @@ public class ListFragment extends Fragment {
         NoteInfo[] noteArray = notesList.toArray(new NoteInfo[notesList.size()]);
         //List<NoteInfo> noteList = new ArrayList<>();
         //create an ArrayAdaptar from the String Array
-        ListAdapter dataAdapter = new ListAdapter(noteArray, getActivity());
+        final ListAdapter dataAdapter = new ListAdapter(noteArray, getActivity());
         final ListView listView = (ListView) view.findViewById(R.id.listaDiNote);
         // Assign adapter to ListView
         listView.setAdapter(dataAdapter);
@@ -90,8 +95,29 @@ public class ListFragment extends Fragment {
             }
         });
 
+//        checkBox =(CheckBox) view.findViewById(R.id.check_note);
+//            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                    @Override
+//                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                        NoteInfo nota = (NoteInfo) checkBox
+//                                .getTag();
+//                        nota.setSelected(buttonView.isChecked());
+//
+//                        for(int i=0; i>notesList.size();i++){
+//                            NoteInfo note = notesList.get(i);
+//                        }
+//                        if(nota.isSelected()){
+//                            Toast.makeText(getActivity(),
+//                                    "Clicked on Checkbox: " + nota.getIdCode() +
+//                                            " is " + nota.isSelected(),
+//                                    Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//                });
+
         return notesList;
     }
+
 
 
 }
