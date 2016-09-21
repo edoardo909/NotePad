@@ -67,6 +67,8 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
                     .beginTransaction()
                     .add(R.id.main_content, new ListFragment())
                     .commit();
+        }else{
+            getFragmentManager().findFragmentById(R.id.displayList);
         }
 
     }

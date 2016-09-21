@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/note_body"
         android:layout_weight="0.90"
-        android:layout_gravity="bottom"/>
+        android:layout_gravity="bottom"
+        android:inputType="text" />
 
 
 </LinearLayout>

@@ -43,7 +43,7 @@ public class DatabaseHandler extends NotesInfoDBDAO {
 //    }
 
     public ArrayList<NoteInfo> getAllNotes() {
-        ArrayList<NoteInfo> notesInfos = new ArrayList<NoteInfo>();
+        ArrayList<NoteInfo> notesInfos = new ArrayList<>();
        // String sql = "SELECT * FROM " + DatabaseHelper.DATABASE_TABLE+"=?";
         //Cursor cursor = database.rawQuery(sql, new String[] { "" });
         Cursor cursor = database.query(DatabaseHelper.DATABASE_TABLE,
@@ -58,6 +58,7 @@ public class DatabaseHandler extends NotesInfoDBDAO {
             nota.setBody(cursor.getString(2));
             notesInfos.add(nota);
         }
+        cursor.close();
         return notesInfos;
     }
 
@@ -70,11 +71,11 @@ public class DatabaseHandler extends NotesInfoDBDAO {
 //        long result = database.update(DatabaseHelper.DATABASE_TABLE, values,
 //                WHERE_ID_EQUALS,
 //                new String[] { String.valueOf(nota.getIdCode()) });
-        long result = database.updateWithOnConflict(DatabaseHelper.DATABASE_TABLE,
+
+        return database.updateWithOnConflict(DatabaseHelper.DATABASE_TABLE,
                 values,
                 WHERE_ID_EQUALS,
                 new String[]{ String.valueOf(nota.getIdCode()) },0);
-        return result;
     }
 
     public int delete(NoteInfo nota) {

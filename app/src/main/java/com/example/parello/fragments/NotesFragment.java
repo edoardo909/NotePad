@@ -2,7 +2,6 @@ package com.example.parello.fragments;
 
 import android.os.Bundle;
 import android.app.Fragment;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,8 @@ import com.example.parello.notepad.R;
  */
 public class NotesFragment extends Fragment {
 
-    private static EditText bodyEditor;
-    private static EditText titleEditor;
+    private EditText bodyEditor;
+    private EditText titleEditor;
     DatabaseHandler handler;
 
    public static NotesFragment getInstance(NoteInfo nota) {
@@ -58,15 +57,16 @@ public class NotesFragment extends Fragment {
         View layout = inflater.inflate(R.layout.editor_view, container, false);
         bodyEditor = (EditText) layout.findViewById(R.id.note_body);
         titleEditor = (EditText) layout.findViewById(R.id.editor_note_title);
-            if(getArguments().getParcelable("nota") != null) {
-                NoteInfo nota = getArguments().getParcelable("nota");
+        NoteInfo nota = getArguments().getParcelable("nota");
+
+
             if (nota == null) {
                 setNote(nota);
             } else {
                 titleEditor.setText(nota.getTitle());
                 bodyEditor.setText(nota.getBody());
              }
-            }
+
         return layout;
     }
 

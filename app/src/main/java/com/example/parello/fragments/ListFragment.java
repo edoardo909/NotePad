@@ -7,21 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.parello.adapter.ListAdapter;
-import com.example.parello.database.DatabaseHelper;
-import com.example.parello.database.NotesInfoDBDAO;
 import com.example.parello.database.DatabaseHandler;
-import com.example.parello.notepad.ListActivity;
 import com.example.parello.notepad.NoteInfo;
 import com.example.parello.notepad.NoteSelectedListener;
 import com.example.parello.notepad.R;
-import com.example.parello.notepad.ListActivity;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,11 +22,8 @@ import java.util.List;
 public class ListFragment extends Fragment {
 
     NoteSelectedListener mListener;
-    private NotesInfoDBDAO notesDAO;
     private ListView listView;
-    private NoteInfo noteInfo;
-    private DatabaseHelper db;
-    private CheckBox checkBox;
+//    private CheckBox checkBox;
     private DatabaseHandler handler;
 
     @Override
