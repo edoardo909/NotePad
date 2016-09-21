@@ -9,4 +9,7 @@
     <string name="modify_note" >Modify</string>
     <string name="save_note" >Save</string>
     <string name="delete_note" >Delete</string>
+    <string name="delete_dialog">Delete note?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

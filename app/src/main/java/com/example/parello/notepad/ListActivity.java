@@ -1,7 +1,10 @@
 package com.example.parello.notepad;
 
+import android.app.Dialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -43,7 +46,7 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
                 saveNote(note);
                 return true;
             case R.id.delete_note:
-                deleteNote(note);
+                deleteNoteDialog().show();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -55,10 +58,9 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        startHandler();
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-        startHandler();
-
 
         if (!isLargeScreen()) {
             getFragmentManager()
@@ -73,6 +75,7 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
     public void onBackPressed() {
         if ( getFragmentManager().getBackStackEntryCount() > 0 ) {
             getFragmentManager().popBackStack();
+            note.setSelected(false);
         } else {
             super.onBackPressed();
         }
@@ -93,7 +96,7 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
             Toast.makeText(getApplicationContext(),
                                     "Clicked on Note: " + nota.getIdCode() +
                                             " is " + nota.isSelected(),
-                                    Toast.LENGTH_LONG).show();
+                                    Toast.LENGTH_SHORT).show();
         } else {
                  getFragmentManager().findFragmentById(R.id.displayNote);
 
@@ -104,7 +107,7 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
     public void emptyNotesFragment(){
         if (!isLargeScreen()) {
             NotesFragment notesFragment =  NotesFragment.newInstance();
-
+            note = new NoteInfo();
             getFragmentManager()
                     .beginTransaction()
                     .replace(R.id.main_content, notesFragment)
@@ -120,26 +123,24 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
     }
 
     private void saveNote(NoteInfo nota){
-
         titleEditor = (EditText)findViewById(R.id.editor_note_title);
         bodyEditor = (EditText)findViewById(R.id.note_body);
-        if(nota.isSelected()) {
+        if(note.isSelected()) {
             getEditorContent(nota);
             handler.update(nota);
             Toast.makeText(getApplicationContext(),
                     "updated Note: " + nota.getIdCode(),
                     Toast.LENGTH_LONG).show();
-        }else {
-
+        }else{
             getEditorContent(nota);
             handler.save(nota);
             Toast.makeText(getApplicationContext(),
-                    "Saved Note: " + nota.getIdCode(),
-                    Toast.LENGTH_SHORT).show();
+                    "saved new Note",
+                    Toast.LENGTH_LONG).show();
         }
     }
 
-    private void deleteNote(NoteInfo nota) {
+    public void deleteNote(NoteInfo nota) {
         handler.delete(nota);
         Toast.makeText(getApplicationContext(),
                 "deleted Note: " + nota.getIdCode(),
@@ -152,18 +153,23 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
         return nota;
     }
 
+    public Dialog deleteNoteDialog(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(R.string.delete_dialog)
+                .setPositiveButton(R.string.yes,new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        deleteNote(note);
+                        onBackPressed();
+                    }
+                })
+                .setNegativeButton(R.string.no,new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
 
-//    private void getInstance(NoteInfo nota){
-//        if (!isLargeScreen()) {
-//            NotesFragment notesFragment =  NotesFragment.setInstance(nota);
-//            getFragmentManager()
-//                    .beginTransaction()
-//                    .replace(R.id.main_content, notesFragment)
-//                    .addToBackStack(null)
-//                    .commit();
-//        } else {
-//            getFragmentManager().findFragmentById(R.id.displayNote);
-//        }
-//    }
+        return alertDialogBuilder.create();
+
+    }
 
 }

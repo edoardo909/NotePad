@@ -28,23 +28,13 @@ public class NotesFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-//    public static NotesFragment setInstance(NoteInfo nota){
-//        NotesFragment fragment = new NotesFragment();
-//        Bundle args = getInstance(nota).getArguments();
-//        nota.setTitle(titleEditor.getText().toString());
-//        nota.setBody(bodyEditor.getText().toString());
-//        args.putParcelable("nota", nota);
-//        fragment.setArguments(args);
-//        return fragment;
-//
-//    }
 
     public static NotesFragment newInstance(){
         NotesFragment fragment = new NotesFragment();
         Bundle args = new Bundle();
         NoteInfo note = new NoteInfo();
         note.setTitle("no title");
-        note.setBody("nota di prova");
+        note.setBody("");
         args.putParcelable("nota", note);
         fragment.setArguments(args);
         return fragment;
@@ -84,7 +74,6 @@ public class NotesFragment extends Fragment {
         note = new NoteInfo();
         note.setTitle(bodyEditor.getText().toString());
         note.setBody(bodyEditor.getText().toString());
-
     }
 
 }

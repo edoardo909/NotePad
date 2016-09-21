@@ -3,8 +3,6 @@ package com.example.parello.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Parcel;
 
 import com.example.parello.notepad.NoteInfo;
 
@@ -29,20 +27,20 @@ public class DatabaseHandler extends NotesInfoDBDAO {
         return database.insert(DatabaseHelper.DATABASE_TABLE, null, initialValues);
     }
 
-    public NoteInfo getNote(NoteInfo nota){
-        NoteInfo noteInfo = null;
-        String sql = "SELECT * FROM " + DatabaseHelper.DATABASE_TABLE
-                + " WHERE " + DatabaseHelper.KEY_ROWID + " =?";
-        database.beginTransaction();
-        Cursor cursor = database.rawQuery(sql, new String[] { nota + "" });
-
-        if (cursor.moveToNext()) {
-            noteInfo = new NoteInfo();
-            noteInfo.setIdCode(cursor.getInt(0));
-            noteInfo.setBody(cursor.getString(1));
-        }
-        return noteInfo;
-    }
+//    public NoteInfo getNote(NoteInfo nota){
+//        NoteInfo noteInfo = null;
+//        String sql = "SELECT * FROM " + DatabaseHelper.DATABASE_TABLE
+//                + " WHERE " + DatabaseHelper.KEY_ROWID + " =?";
+//        database.beginTransaction();
+//        Cursor cursor = database.rawQuery(sql, new String[] { nota + "" });
+//
+//        if (cursor.moveToNext()) {
+//            noteInfo = new NoteInfo();
+//            noteInfo.setIdCode(cursor.getInt(0));
+//            noteInfo.setBody(cursor.getString(1));
+//        }
+//        return noteInfo;
+//    }
 
     public ArrayList<NoteInfo> getAllNotes() {
         ArrayList<NoteInfo> notesInfos = new ArrayList<NoteInfo>();
@@ -63,8 +61,6 @@ public class DatabaseHandler extends NotesInfoDBDAO {
         return notesInfos;
     }
 
-
-
     public long update(NoteInfo nota) {
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.KEY_ROWID,nota.getIdCode());
@@ -74,9 +70,11 @@ public class DatabaseHandler extends NotesInfoDBDAO {
 //        long result = database.update(DatabaseHelper.DATABASE_TABLE, values,
 //                WHERE_ID_EQUALS,
 //                new String[] { String.valueOf(nota.getIdCode()) });
-        long result = database.updateWithOnConflict(DatabaseHelper.DATABASE_TABLE,values,WHERE_ID_EQUALS,new String[]{ String.valueOf(nota.getIdCode()) },0);
+        long result = database.updateWithOnConflict(DatabaseHelper.DATABASE_TABLE,
+                values,
+                WHERE_ID_EQUALS,
+                new String[]{ String.valueOf(nota.getIdCode()) },0);
         return result;
-
     }
 
     public int delete(NoteInfo nota) {

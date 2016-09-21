@@ -79,7 +79,6 @@ public class ListFragment extends Fragment {
         notesList.add(new NoteInfo("testo di prova"));
         }
         NoteInfo[] noteArray = notesList.toArray(new NoteInfo[notesList.size()]);
-        //List<NoteInfo> noteList = new ArrayList<>();
         //create an ArrayAdaptar from the String Array
         final ListAdapter dataAdapter = new ListAdapter(noteArray, getActivity());
         final ListView listView = (ListView) view.findViewById(R.id.listaDiNote);
@@ -91,7 +90,6 @@ public class ListFragment extends Fragment {
                                     int position, long id) {
                 NoteInfo nota = (NoteInfo) listView.getAdapter().getItem(position);
                 mListener.noteSelected(nota);
-
             }
         });
 
