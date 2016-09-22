@@ -2,8 +2,11 @@ package com.example.parello.notepad;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -25,7 +28,9 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
     NoteInfo note = null;
 
     private boolean isLargeScreen() {
-        Fragment listFragment = getFragmentManager().findFragmentById(R.id.displayList);
+//        String size = getSizeName(getApplicationContext());
+ //       return size == "xlarge" ? false : true;
+        Fragment listFragment = getFragmentManager().findFragmentById(R.id.list_fragment);
         return listFragment == null ? false : true;
     }
 
@@ -44,9 +49,11 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
                 return true;
             case R.id.save_note:
                 saveNote(note);
+                refreshFragment();
                 return true;
             case R.id.delete_note:
                 deleteNoteDialog().show();
+                refreshFragment();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -57,8 +64,11 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
         startHandler();
+        if (savedInstanceState != null) {
+            return;
+        }
+        setContentView(R.layout.main);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
@@ -68,7 +78,7 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
                     .add(R.id.main_content, new ListFragment())
                     .commit();
         }else{
-            getFragmentManager().findFragmentById(R.id.displayList);
+            getFragmentManager().findFragmentById(R.id.list_fragment);
         }
 
     }
@@ -100,7 +110,20 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
                                             " is " + nota.isSelected(),
                                     Toast.LENGTH_SHORT).show();
         } else {
-                 getFragmentManager().findFragmentById(R.id.displayNote);
+                 getFragmentManager().findFragmentById(R.id.list_fragment);
+            nota.setSelected(true);
+            NotesFragment notesFragment = NotesFragment.getInstance(nota);
+            note = notesFragment.getArguments().getParcelable("nota");
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.note_fragment, notesFragment)
+                    .addToBackStack(null)
+                    .commit();
+
+            Toast.makeText(getApplicationContext(),
+                    "Clicked on Note: " + nota.getIdCode() +
+                            " is " + nota.isSelected(),
+                    Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -116,7 +139,10 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
                     .addToBackStack(null)
                     .commit();
         } else {
-                getFragmentManager().findFragmentById(R.id.displayNote);
+            NotesFragment notesFragment = NotesFragment.newInstance();
+            note = new NoteInfo();
+            getFragmentManager().beginTransaction().replace(R.id.note_fragment,notesFragment).addToBackStack(null).commit();
+                getFragmentManager().findFragmentById(R.id.list_fragment);
         }
     }
 
@@ -127,19 +153,29 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
     private void saveNote(NoteInfo nota){
         titleEditor = (EditText)findViewById(R.id.editor_note_title);
         bodyEditor = (EditText)findViewById(R.id.note_body);
-        if(note.isSelected()) {
-            getEditorContent(nota);
-            handler.update(nota);
-            Toast.makeText(getApplicationContext(),
-                    "updated Note: " + nota.getIdCode(),
-                    Toast.LENGTH_LONG).show();
-        }else{
-            getEditorContent(nota);
-            handler.save(nota);
-            Toast.makeText(getApplicationContext(),
-                    "saved new Note",
-                    Toast.LENGTH_LONG).show();
-        }
+
+            if (note.isSelected()) {
+                getEditorContent(nota);
+                handler.update(nota);
+                Toast.makeText(getApplicationContext(),
+                        "updated Note: " + nota.getIdCode(),
+                        Toast.LENGTH_LONG).show();
+            } else {
+
+                getFragmentManager()
+                        .beginTransaction()
+                        .detach(getFragmentManager().findFragmentById(R.id.list_fragment))
+                        .attach(getFragmentManager().findFragmentById(R.id.list_fragment))
+                        .commit();
+
+                getEditorContent(nota);
+                handler.save(nota);
+                Toast.makeText(getApplicationContext(),
+                        "saved new Note",
+                        Toast.LENGTH_LONG).show();
+            }
+
+
     }
 
     public void deleteNote(NoteInfo nota) {
@@ -174,4 +210,13 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
 
     }
 
+
+   private void refreshFragment(){
+       ListFragment listFragment = (ListFragment) getFragmentManager().findFragmentById(R.id.list_fragment);
+       getFragmentManager()
+               .beginTransaction()
+               .replace(R.id.list_fragment, listFragment)
+               .addToBackStack(null)
+               .commit();
+   }
 }

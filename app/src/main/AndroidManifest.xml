@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.parello.notepad">
 
+    <supports-screens
+        android:xlargeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:largeScreens="true"/>
 
 
     <application
@@ -18,9 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-
     </application>
+
+
 
 </manifest>

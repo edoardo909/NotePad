@@ -39,6 +39,19 @@ public class NotesFragment extends Fragment {
         return fragment;
     }
 
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//
+//        NoteInfo nota = getArguments().getParcelable("nota");
+//        if (nota == null) {
+//            setNote(nota);
+//        } else {
+//            titleEditor.setText(nota.getTitle());
+//            bodyEditor.setText(nota.getBody());
+//        }
+//    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,14 +66,17 @@ public class NotesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View layout = inflater.inflate(R.layout.editor_view, container, false);
         bodyEditor = (EditText) layout.findViewById(R.id.note_body);
         titleEditor = (EditText) layout.findViewById(R.id.editor_note_title);
-        NoteInfo nota = getArguments().getParcelable("nota");
 
-
-            if (nota == null) {
+        NoteInfo nota = null;
+        try {
+            nota = getArguments().getParcelable("nota");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (nota == null) {
                 setNote(nota);
             } else {
                 titleEditor.setText(nota.getTitle());
