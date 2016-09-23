@@ -114,11 +114,9 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
             nota.setSelected(true);
             NotesFragment notesFragment = NotesFragment.getInstance(nota);
             note = notesFragment.getArguments().getParcelable("nota");
-            getFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.note_fragment, notesFragment)
-                    .addToBackStack(null)
-                    .commit();
+            getFragmentManager().beginTransaction().remove(notesFragment);
+          //  notesFragment.getNote();
+            getFragmentManager().beginTransaction().add(R.id.note_fragment,notesFragment);
 
             Toast.makeText(getApplicationContext(),
                     "Clicked on Note: " + nota.getIdCode() +
@@ -139,10 +137,12 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
                     .addToBackStack(null)
                     .commit();
         } else {
+            getFragmentManager().findFragmentById(R.id.list_fragment);
             NotesFragment notesFragment = NotesFragment.newInstance();
             note = new NoteInfo();
-            getFragmentManager().beginTransaction().replace(R.id.note_fragment,notesFragment).addToBackStack(null).commit();
-                getFragmentManager().findFragmentById(R.id.list_fragment);
+            getFragmentManager().beginTransaction().remove(notesFragment);
+            getFragmentManager().beginTransaction().add(R.id.note_fragment,notesFragment);
+
         }
     }
 
@@ -156,20 +156,34 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
 
             if (note.isSelected()) {
                 getEditorContent(nota);
-                handler.update(nota);
+                try {
+                    handler.update(nota);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(),
+                            "unable to update note: " + nota.getIdCode(),
+                            Toast.LENGTH_LONG).show();
+                }
                 Toast.makeText(getApplicationContext(),
                         "updated Note: " + nota.getIdCode(),
                         Toast.LENGTH_LONG).show();
             } else {
-
-                getFragmentManager()
-                        .beginTransaction()
-                        .detach(getFragmentManager().findFragmentById(R.id.list_fragment))
-                        .attach(getFragmentManager().findFragmentById(R.id.list_fragment))
-                        .commit();
+                nota = new NoteInfo();
+//                getFragmentManager()
+//                        .beginTransaction()
+//                        .detach(getFragmentManager().findFragmentById(R.id.list_fragment))
+//                        .attach(getFragmentManager().findFragmentById(R.id.list_fragment))
+//                        .commit();
 
                 getEditorContent(nota);
-                handler.save(nota);
+                try {
+                    handler.save(nota);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(),
+                            "unable to save note: " + nota.getIdCode(),
+                            Toast.LENGTH_LONG).show();
+                }
                 Toast.makeText(getApplicationContext(),
                         "saved new Note",
                         Toast.LENGTH_LONG).show();

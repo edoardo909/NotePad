@@ -88,8 +88,13 @@ public class NotesFragment extends Fragment {
 
     public void setNote(NoteInfo note){
         note = new NoteInfo();
-        note.setTitle(bodyEditor.getText().toString());
+        note.setTitle(titleEditor.getText().toString());
         note.setBody(bodyEditor.getText().toString());
     }
+//    public void getNote(){
+//        NoteInfo note = getArguments().getParcelable("nota");
+//        titleEditor.setText(note.getTitle());
+//        bodyEditor.setText(note.getBody());
+//    }
 
 }
