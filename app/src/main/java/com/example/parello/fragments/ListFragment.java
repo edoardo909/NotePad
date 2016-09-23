@@ -7,8 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+<<<<<<< Updated upstream
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+=======
+import android.widget.EditText;
+>>>>>>> Stashed changes
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -36,6 +40,8 @@ public class ListFragment extends Fragment {
     private DatabaseHelper db;
     private CheckBox checkBox;
     private DatabaseHandler handler;
+    private EditText bodyEditor;
+    private EditText titleEditor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,7 @@ public class ListFragment extends Fragment {
         View view = inflater.inflate(R.layout.list_view, container, false);
         displayListView(view);
 
+
         return view;
     }
 
@@ -65,6 +72,14 @@ public class ListFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement NoteSelectedListener");
         }
+    }
+
+    public static ListFragment getInstance(NoteInfo nota) {
+        ListFragment fragment = new ListFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("nota", nota);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     private List<NoteInfo> displayListView(View view) {
