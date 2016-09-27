@@ -2,11 +2,9 @@ package com.example.parello.notepad;
 
 import android.app.Dialog;
 import android.app.Fragment;
-import android.content.Context;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -25,11 +23,9 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
     private DatabaseHandler handler;
     private EditText bodyEditor;
     private EditText titleEditor;
-    NoteInfo note = null;
+    private NoteInfo note = null;
 
     private boolean isLargeScreen() {
-//        String size = getSizeName(getApplicationContext());
- //       return size == "xlarge" ? false : true;
         Fragment listFragment = getFragmentManager().findFragmentById(R.id.list_fragment);
         return listFragment == null ? false : true;
     }
@@ -49,11 +45,13 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
                 return true;
             case R.id.save_note:
                 saveNote(note);
-                refreshFragment();
+                if(isLargeScreen())
+                refreshTabletListFragment();
                 return true;
             case R.id.delete_note:
                 deleteNoteDialog().show();
-                refreshFragment();
+                if(isLargeScreen())
+                refreshTabletListFragment();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -73,7 +71,7 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
         setSupportActionBar(myToolbar);
 
         if (!isLargeScreen()) {
-            getFragmentManager()
+           getFragmentManager()
                     .beginTransaction()
                     .add(R.id.main_content, new ListFragment())
                     .commit();
@@ -83,11 +81,12 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
 
     }
 
+
     @Override
     public void onBackPressed() {
         if ( getFragmentManager().getBackStackEntryCount() > 0 ) {
             getFragmentManager().popBackStack();
-            note.setSelected(false);
+            note.setChecked(false);
         } else {
             super.onBackPressed();
         }
@@ -95,8 +94,9 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
 
     @Override
     public void noteSelected(NoteInfo nota) {
+        findViewById();
         if (!isLargeScreen()) {
-            nota.setSelected(true);
+            nota.setChecked(true);
             NotesFragment notesFragment = NotesFragment.getInstance(nota);
             note = notesFragment.getArguments().getParcelable("nota");
             getFragmentManager()
@@ -107,25 +107,36 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
 
             Toast.makeText(getApplicationContext(),
                                     "Clicked on Note: " + nota.getIdCode() +
-                                            " is " + nota.isSelected(),
+                                            " is " + nota.isChecked(),
                                     Toast.LENGTH_SHORT).show();
         } else {
                  getFragmentManager().findFragmentById(R.id.list_fragment);
-            nota.setSelected(true);
+            nota.setChecked(true);
             NotesFragment notesFragment = NotesFragment.getInstance(nota);
             note = notesFragment.getArguments().getParcelable("nota");
+            titleEditor.setText(note.getTitle().toString());
+            bodyEditor.setText(note.getBody().toString());
             getFragmentManager().beginTransaction().remove(notesFragment);
-          //  notesFragment.getNote();
             getFragmentManager().beginTransaction().add(R.id.note_fragment,notesFragment);
 
             Toast.makeText(getApplicationContext(),
                     "Clicked on Note: " + nota.getIdCode() +
-                            " is " + nota.isSelected(),
+                            " is " + nota.isChecked(),
                     Toast.LENGTH_SHORT).show();
-
         }
     }
 
+    public void noteChecked(NoteInfo nota){
+        findViewById();
+        getFragmentManager().findFragmentById(R.id.list_fragment);
+        nota.setChecked(true);
+        NotesFragment notesFragment = NotesFragment.getInstance(nota);
+        note = notesFragment.getArguments().getParcelable("nota");
+        Toast.makeText(getApplicationContext(),
+                "Clicked on Note: " + nota.getIdCode() +
+                        " is " + nota.isChecked(),
+                Toast.LENGTH_SHORT).show();
+    }
 
     public void emptyNotesFragment(){
         if (!isLargeScreen()) {
@@ -140,6 +151,7 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
             getFragmentManager().findFragmentById(R.id.list_fragment);
             NotesFragment notesFragment = NotesFragment.newInstance();
             note = new NoteInfo();
+            resetTextFields();
             getFragmentManager().beginTransaction().remove(notesFragment);
             getFragmentManager().beginTransaction().add(R.id.note_fragment,notesFragment);
 
@@ -151,10 +163,7 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
     }
 
     private void saveNote(NoteInfo nota){
-        titleEditor = (EditText)findViewById(R.id.editor_note_title);
-        bodyEditor = (EditText)findViewById(R.id.note_body);
-
-            if (note.isSelected()) {
+            if (note.isChecked()) {
                 getEditorContent(nota);
                 try {
                     handler.update(nota);
@@ -169,12 +178,6 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
                         Toast.LENGTH_LONG).show();
             } else {
                 nota = new NoteInfo();
-//                getFragmentManager()
-//                        .beginTransaction()
-//                        .detach(getFragmentManager().findFragmentById(R.id.list_fragment))
-//                        .attach(getFragmentManager().findFragmentById(R.id.list_fragment))
-//                        .commit();
-
                 getEditorContent(nota);
                 try {
                     handler.save(nota);
@@ -194,12 +197,14 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
 
     public void deleteNote(NoteInfo nota) {
         handler.delete(nota);
+        resetTextFields();
         Toast.makeText(getApplicationContext(),
                 "deleted Note: " + nota.getIdCode(),
                 Toast.LENGTH_SHORT).show();
     }
 
     private NoteInfo getEditorContent(NoteInfo nota){
+        findViewById();
         nota.setTitle(titleEditor.getText().toString());
         nota.setBody(bodyEditor.getText().toString());
         return nota;
@@ -211,7 +216,6 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
                 .setPositiveButton(R.string.yes,new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
                         deleteNote(note);
-                        onBackPressed();
                     }
                 })
                 .setNegativeButton(R.string.no,new DialogInterface.OnClickListener() {
@@ -224,13 +228,18 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
 
     }
 
+    private void findViewById(){
+        titleEditor = (EditText)findViewById(R.id.editor_note_title);
+        bodyEditor = (EditText)findViewById(R.id.note_body);
+    }
 
-   private void refreshFragment(){
+   private void refreshTabletListFragment(){
        ListFragment listFragment = (ListFragment) getFragmentManager().findFragmentById(R.id.list_fragment);
-       getFragmentManager()
-               .beginTransaction()
-               .replace(R.id.list_fragment, listFragment)
-               .addToBackStack(null)
-               .commit();
+       listFragment.refreshList();
    }
+
+    private void resetTextFields(){
+        titleEditor.setText("");
+        bodyEditor.setText("");
+    }
 }

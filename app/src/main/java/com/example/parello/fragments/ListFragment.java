@@ -22,14 +22,16 @@ import java.util.List;
 public class ListFragment extends Fragment {
 
     NoteSelectedListener mListener;
-    private ListView listView;
-//    private CheckBox checkBox;
-    private DatabaseHandler handler;
+    private ListView mListView;
+    private ListAdapter mDataAdapter;
+    private DatabaseHandler mDatabase;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        handler = new DatabaseHandler(getActivity());
+        mDatabase = new DatabaseHandler(getActivity());
+        //setRetainInstance(true);
     }
 
     @Override
@@ -41,7 +43,22 @@ public class ListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_view, container, false);
-        displayListView(view);
+
+        List<NoteInfo> notesList = getNoteInfoData();
+        NoteInfo[] noteArray = notesList.toArray(new NoteInfo[notesList.size()]);
+        //create an ArrayAdaptar from the String Array
+        mDataAdapter = new ListAdapter(noteArray, getActivity());
+        mListView = (ListView) view.findViewById(R.id.listaDiNote);
+        // Assign adapter to ListView
+        mListView.setAdapter(mDataAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                NoteInfo nota = (NoteInfo) mListView.getAdapter().getItem(position);
+                mListener.noteSelected(nota);
+            }
+        });
+
 
         return view;
     }
@@ -56,55 +73,25 @@ public class ListFragment extends Fragment {
         }
     }
 
-    private List<NoteInfo> displayListView(View view) {
-        listView = (ListView) view.findViewById(R.id.listaDiNote);
 
-        final List<NoteInfo> notesList = handler.getAllNotes();
+
+    private List<NoteInfo> getNoteInfoData() {
+        List<NoteInfo> notesList = mDatabase.getAllNotes();
 
         if (notesList.isEmpty()) {
-        notesList.add(new NoteInfo("database"));
-        notesList.add(new NoteInfo("vuoto"));
-        notesList.add(new NoteInfo("quindi"));
-        notesList.add(new NoteInfo("testo di prova"));
+            notesList.add(new NoteInfo("database"));
+            notesList.add(new NoteInfo("vuoto"));
+            notesList.add(new NoteInfo("quindi"));
+            notesList.add(new NoteInfo("testo di prova"));
         }
-        NoteInfo[] noteArray = notesList.toArray(new NoteInfo[notesList.size()]);
-        //create an ArrayAdaptar from the String Array
-        final ListAdapter dataAdapter = new ListAdapter(noteArray, getActivity());
-        final ListView listView = (ListView) view.findViewById(R.id.listaDiNote);
-        // Assign adapter to ListView
-        listView.setAdapter(dataAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                NoteInfo nota = (NoteInfo) listView.getAdapter().getItem(position);
-                mListener.noteSelected(nota);
-            }
-        });
-
-//        checkBox =(CheckBox) view.findViewById(R.id.check_note);
-//            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//                    @Override
-//                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                        NoteInfo nota = (NoteInfo) checkBox
-//                                .getTag();
-//                        nota.setSelected(buttonView.isChecked());
-//
-//                        for(int i=0; i>notesList.size();i++){
-//                            NoteInfo note = notesList.get(i);
-//                        }
-//                        if(nota.isSelected()){
-//                            Toast.makeText(getActivity(),
-//                                    "Clicked on Checkbox: " + nota.getIdCode() +
-//                                            " is " + nota.isSelected(),
-//                                    Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                });
-
         return notesList;
     }
 
-
+    public void refreshList() {
+        List<NoteInfo> notesList = mDatabase.getAllNotes();
+        NoteInfo[] noteArray = notesList.toArray(new NoteInfo[notesList.size()]);
+        mDataAdapter.setData(noteArray);
+        mDataAdapter.notifyDataSetChanged();
+    }
 
 }

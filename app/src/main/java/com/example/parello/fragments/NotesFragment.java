@@ -39,23 +39,11 @@ public class NotesFragment extends Fragment {
         return fragment;
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//
-//        NoteInfo nota = getArguments().getParcelable("nota");
-//        if (nota == null) {
-//            setNote(nota);
-//        } else {
-//            titleEditor.setText(nota.getTitle());
-//            bodyEditor.setText(nota.getBody());
-//        }
-//    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         handler = new DatabaseHandler(getActivity());
+        //setRetainInstance(true);
     }
 
     @Override
@@ -91,10 +79,6 @@ public class NotesFragment extends Fragment {
         note.setTitle(titleEditor.getText().toString());
         note.setBody(bodyEditor.getText().toString());
     }
-//    public void getNote(){
-//        NoteInfo note = getArguments().getParcelable("nota");
-//        titleEditor.setText(note.getTitle());
-//        bodyEditor.setText(note.getBody());
-//    }
+
 
 }

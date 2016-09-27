@@ -6,5 +6,6 @@ package com.example.parello.notepad;
 public interface NoteSelectedListener {
 
     public void noteSelected(NoteInfo nota);
+    public void noteChecked(NoteInfo nota);
 
 }
