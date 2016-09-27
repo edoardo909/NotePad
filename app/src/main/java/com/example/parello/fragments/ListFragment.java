@@ -34,6 +34,7 @@ import java.util.List;
 public class ListFragment extends Fragment {
 
     NoteSelectedListener mListener;
+<<<<<<< Updated upstream
     private NotesInfoDBDAO notesDAO;
     private ListView listView;
     private NoteInfo noteInfo;
@@ -42,11 +43,16 @@ public class ListFragment extends Fragment {
     private DatabaseHandler handler;
     private EditText bodyEditor;
     private EditText titleEditor;
+=======
+    private ListView mListView;
+    private ListAdapter mDataAdapter;
+    private DatabaseHandler mDatabase;
+>>>>>>> Stashed changes
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        handler = new DatabaseHandler(getActivity());
+        mDatabase = new DatabaseHandler(getActivity());
     }
 
     @Override
@@ -58,7 +64,21 @@ public class ListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_view, container, false);
-        displayListView(view);
+
+        List<NoteInfo> notesList = getNoteInfoData();
+        NoteInfo[] noteArray = notesList.toArray(new NoteInfo[notesList.size()]);
+        //create an ArrayAdaptar from the String Array
+        mDataAdapter = new ListAdapter(noteArray, getActivity());
+        mListView = (ListView) view.findViewById(R.id.listaDiNote);
+        // Assign adapter to ListView
+        mListView.setAdapter(mDataAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                NoteInfo nota = (NoteInfo) mListView.getAdapter().getItem(position);
+                mListener.noteSelected(nota);
+            }
+        });
 
 
         return view;
@@ -74,6 +94,7 @@ public class ListFragment extends Fragment {
         }
     }
 
+<<<<<<< Updated upstream
     public static ListFragment getInstance(NoteInfo nota) {
         ListFragment fragment = new ListFragment();
         Bundle args = new Bundle();
@@ -84,15 +105,19 @@ public class ListFragment extends Fragment {
 
     private List<NoteInfo> displayListView(View view) {
         listView = (ListView) view.findViewById(R.id.listaDiNote);
+=======
+    private List<NoteInfo> getNoteInfoData() {
+>>>>>>> Stashed changes
 
-        final List<NoteInfo> notesList = handler.getAllNotes();
+        List<NoteInfo> notesList = mDatabase.getAllNotes();
 
         if (notesList.isEmpty()) {
-        notesList.add(new NoteInfo("database"));
-        notesList.add(new NoteInfo("vuoto"));
-        notesList.add(new NoteInfo("quindi"));
-        notesList.add(new NoteInfo("testo di prova"));
+            notesList.add(new NoteInfo("database"));
+            notesList.add(new NoteInfo("vuoto"));
+            notesList.add(new NoteInfo("quindi"));
+            notesList.add(new NoteInfo("testo di prova"));
         }
+<<<<<<< Updated upstream
         NoteInfo[] noteArray = notesList.toArray(new NoteInfo[notesList.size()]);
         //List<NoteInfo> noteList = new ArrayList<>();
         //create an ArrayAdaptar from the String Array
@@ -130,9 +155,16 @@ public class ListFragment extends Fragment {
 //                    }
 //                });
 
+=======
+>>>>>>> Stashed changes
         return notesList;
     }
 
-
+    public void refreshList() {
+        List<NoteInfo> notesList = mDatabase.getAllNotes();
+        NoteInfo[] noteArray = notesList.toArray(new NoteInfo[notesList.size()]);
+        mDataAdapter.setData(noteArray);
+        mDataAdapter.notifyDataSetChanged();
+    }
 
 }

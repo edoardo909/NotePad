@@ -2,16 +2,17 @@ package com.example.parello.notepad;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.Checkable;
 
 /**
  * Created by Parello on 08/09/2016.
  */
-public class NoteInfo implements Parcelable {
+public class NoteInfo implements Parcelable, Checkable {
 
     private int idCode;
     private String title;
     private String body;
-    private boolean selected;
+    private boolean checked;
 
     private NoteInfo(Parcel in) {
         idCode = in.readInt();
@@ -53,13 +54,6 @@ public class NoteInfo implements Parcelable {
         this.body = body;
     }
 
-    public boolean isSelected(){
-        return selected;
-    }
-    public void setSelected(boolean selected){
-        this.selected = selected;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -84,4 +78,19 @@ public class NoteInfo implements Parcelable {
         }
 
     };
+
+    @Override
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    @Override
+    public boolean isChecked() {
+        return checked;
+    }
+
+    @Override
+    public void toggle() {
+        checked = !checked;
+    }
 }

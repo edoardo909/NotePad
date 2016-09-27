@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -47,11 +48,10 @@ public class ListAdapter extends BaseAdapter {
         return position;
     }
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View layout = convertView;
-        NoteInfo nota = data[position];
+        final NoteInfo nota = data[position];
         ViewHolder holder = null;
 
         if (layout == null) {
@@ -62,14 +62,28 @@ public class ListAdapter extends BaseAdapter {
             holder.checkBox = (CheckBox) layout.findViewById(R.id.check_note);
             holder.title = (TextView) layout.findViewById(R.id.note_title);
 
+            holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (buttonView.isPressed()) {
+                        nota.setChecked(isChecked);
+                    }
+                }
+            });
+
             layout.setTag(holder);
         } else {
             holder = (ViewHolder) layout.getTag();
         }
         holder.title.setText(nota.getTitle());
+        holder.checkBox.setChecked(nota.isChecked());
 
         return layout;
 
+    }
+
+    public void setData(NoteInfo [] data) {
+        this.data = data;
     }
 
     static class ViewHolder {
