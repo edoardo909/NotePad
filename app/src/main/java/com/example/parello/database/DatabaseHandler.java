@@ -7,6 +7,7 @@ import android.database.Cursor;
 import com.example.parello.notepad.NoteInfo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Parello on 08/09/2016.

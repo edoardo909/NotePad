@@ -2,22 +2,20 @@ package com.example.parello.adapter;
 
 import com.example.parello.notepad.ListActivity;
 import com.example.parello.notepad.NoteInfo;
-import com.example.parello.notepad.NoteSelectedListener;
 import com.example.parello.notepad.R;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by Parello on 08/09/2016.
@@ -52,7 +50,7 @@ public class ListAdapter extends BaseAdapter {
 
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView( int position, View convertView, ViewGroup parent) {
         View layout = convertView;
         final NoteInfo nota = data[position];
         ViewHolder holder = null;
@@ -69,8 +67,9 @@ public class ListAdapter extends BaseAdapter {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (buttonView.isPressed()) {
-                        data[position].setChecked(isChecked);
-
+                        ((ListActivity)context).noteChecked(nota);
+                        nota.setChecked(isChecked);
+                        Log.i("idCode " + nota.getIdCode() ,"checked " + nota.isChecked());
                     }
                 }
             });
@@ -87,6 +86,12 @@ public class ListAdapter extends BaseAdapter {
     public void setData(NoteInfo [] data) {
         this.data = data;
     }
+
+    public NoteInfo [] getData(){
+        return data;
+    }
+
+
 
     static class ViewHolder {
         TextView title;
