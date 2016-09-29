@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import com.example.parello.adapter.ListAdapter;
 import com.example.parello.database.DatabaseHandler;
+import com.example.parello.notepad.ListActivity;
 import com.example.parello.notepad.NoteInfo;
 import com.example.parello.notepad.NoteSelectedListener;
 import com.example.parello.notepad.R;
@@ -38,7 +39,7 @@ public class ListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDatabase = new DatabaseHandler(getActivity());
-        //setRetainInstance(true);
+
     }
 
     @Override
@@ -114,5 +115,21 @@ public class ListFragment extends Fragment {
        mDataAdapter.notifyDataSetChanged();
        return notesToDelete;
    }
+
+    public void refreshPhoneListFragment() {
+        if(getFragmentManager().getBackStackEntryCount()>0){
+            getActivity().onBackPressed();
+        }else{
+            ListFragment listFragment = (ListFragment) getFragmentManager().findFragmentById(R.id.main_content);
+            listFragment.refreshList();
+        }
+    }
+
+
+
+    public void refreshTabletListFragment(){
+        ListFragment listFragment = (ListFragment) getFragmentManager().findFragmentById(R.id.list_fragment);
+        listFragment.refreshList();
+    }
 
 }
