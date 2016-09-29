@@ -128,17 +128,9 @@ public class NotesFragment extends Fragment {
             notesToDelete.add(note);
             mDatabase.delete(note);
         }
-
     }
 
-    public void deleteNote(NoteInfo nota) {
-        mDatabase.delete(nota);
 
-        resetTextFields();
-        Toast.makeText(getActivity(),
-                "deleted Note: " + nota.getIdCode(),
-                Toast.LENGTH_SHORT).show();
-    }
 
     private NoteInfo getEditorContent(NoteInfo nota){
         findViews();

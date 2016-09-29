@@ -112,24 +112,9 @@ public class ListFragment extends Fragment {
                notesToDelete.add(note);
            }
        }
-       mDataAdapter.notifyDataSetChanged();
        return notesToDelete;
    }
 
-    public void refreshPhoneListFragment() {
-        if(getFragmentManager().getBackStackEntryCount()>0){
-            getActivity().onBackPressed();
-        }else{
-            ListFragment listFragment = (ListFragment) getFragmentManager().findFragmentById(R.id.main_content);
-            listFragment.refreshList();
-        }
-    }
 
-
-
-    public void refreshTabletListFragment(){
-        ListFragment listFragment = (ListFragment) getFragmentManager().findFragmentById(R.id.list_fragment);
-        listFragment.refreshList();
-    }
 
 }

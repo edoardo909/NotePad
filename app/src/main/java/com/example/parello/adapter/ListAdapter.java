@@ -68,7 +68,6 @@ public class ListAdapter extends BaseAdapter {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (buttonView.isPressed()) {
                         ((ListActivity)context).noteChecked(nota);
-                        nota.setChecked(isChecked);
                         Log.i("idCode " + nota.getIdCode() ,"checked " + nota.isChecked());
                     }
                 }
