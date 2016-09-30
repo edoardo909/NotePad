@@ -116,21 +116,7 @@ public class NotesFragment extends Fragment {
                     "saved new Note",
                     Toast.LENGTH_LONG).show();
         }
-
-
     }
-
-    public void deleteNotes(){
-        ListFragment listFragment =  (ListFragment) getFragmentManager().findFragmentById(R.id.list_fragment);
-        List<NoteInfo> notesChecked = listFragment.getNotesToDelete();
-        List<NoteInfo> notesToDelete = new ArrayList<>();
-        for(NoteInfo note : notesChecked){
-            notesToDelete.add(note);
-            mDatabase.delete(note);
-        }
-    }
-
-
 
     private NoteInfo getEditorContent(NoteInfo nota){
         findViews();
@@ -138,9 +124,6 @@ public class NotesFragment extends Fragment {
         nota.setBody(bodyEditor.getText().toString());
         return nota;
     }
-
-
-
 
     public void findViews(){
         titleEditor = (EditText)getActivity().findViewById(R.id.editor_note_title);
@@ -152,5 +135,14 @@ public class NotesFragment extends Fragment {
             titleEditor.setText("");
             bodyEditor.setText("");
         }
+    }
+
+    public boolean checkNoteFields() {
+        //String title = titleEditor.getText().toString();
+        String body = bodyEditor.getText().toString();
+        if(!body.isEmpty())
+            return true;
+            else
+            return false;
     }
 }

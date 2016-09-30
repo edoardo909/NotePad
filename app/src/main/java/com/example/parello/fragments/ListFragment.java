@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -38,6 +39,7 @@ public class ListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         mDatabase = new DatabaseHandler(getActivity());
 
     }
@@ -47,6 +49,18 @@ public class ListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
+    private boolean isTablet(){
+        Fragment listFragment = getFragmentManager().findFragmentById(R.id.list_fragment);
+        Fragment noteFragment = getFragmentManager().findFragmentById(R.id.note_fragment);
+        return listFragment == null || noteFragment == null ? false : true;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu (Menu menu) {
+        if (!isTablet() && getFragmentManager().getBackStackEntryCount()==0 ) {
+            menu.findItem(R.id.save_note).setVisible(false);
+        }
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,12 +80,8 @@ public class ListFragment extends Fragment {
                                     int position, long id) {
                 NoteInfo nota = (NoteInfo) mListView.getAdapter().getItem(position);
                 mListener.noteSelected(nota);
-
-
             }
         });
-
-
         return view;
     }
 
@@ -115,6 +125,13 @@ public class ListFragment extends Fragment {
        return notesToDelete;
    }
 
-
-
+    public void deleteNotes() {
+        ListFragment listFragment =  (ListFragment) getFragmentManager().findFragmentById(R.id.main_content);
+        List<NoteInfo> notesChecked = listFragment.getNotesToDelete();
+        List<NoteInfo> notesToDelete = new ArrayList<>();
+        for(NoteInfo note : notesChecked){
+            notesToDelete.add(note);
+            mDatabase.delete(note);
+        }
+    }
 }
