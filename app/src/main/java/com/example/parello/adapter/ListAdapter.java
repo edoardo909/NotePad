@@ -5,6 +5,7 @@ import com.example.parello.notepad.NoteInfo;
 import com.example.parello.notepad.R;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,8 +62,13 @@ public class ListAdapter extends BaseAdapter {
             holder = new ViewHolder();
 
             holder.checkBox = (CheckBox) layout.findViewById(R.id.check_note);
-            holder.title = (TextView) layout.findViewById(R.id.note_title);
 
+            holder.title = (TextView) layout.findViewById(R.id.note_title);
+            if (position % 2 == 1) {
+                layout.setBackgroundColor(Color.WHITE);
+            } else {
+                layout.setBackgroundColor(Color.LTGRAY);
+            }
             holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

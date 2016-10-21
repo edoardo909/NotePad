@@ -80,6 +80,7 @@ public class ListFragment extends Fragment {
                                     int position, long id) {
                 NoteInfo nota = (NoteInfo) mListView.getAdapter().getItem(position);
                 mListener.noteSelected(nota);
+
             }
         });
         return view;
@@ -115,23 +116,26 @@ public class ListFragment extends Fragment {
     }
 
    public List<NoteInfo> getNotesToDelete(){
-       List<NoteInfo> notesChecked = Arrays.asList(mDataAdapter.getData());
+       List<NoteInfo> notesAvailable = Arrays.asList(mDataAdapter.getData());
        List<NoteInfo> notesToDelete = new ArrayList<>();
-       for(NoteInfo note : notesChecked){
+       for(NoteInfo note : notesAvailable){
            if (note.isChecked()){
                notesToDelete.add(note);
            }
        }
+       refreshList();
        return notesToDelete;
    }
 
     public void deleteNotes() {
         ListFragment listFragment =  (ListFragment) getFragmentManager().findFragmentById(R.id.main_content);
-        List<NoteInfo> notesChecked = listFragment.getNotesToDelete();
+
+        List<NoteInfo> notesChecked = getNotesToDelete();
         List<NoteInfo> notesToDelete = new ArrayList<>();
         for(NoteInfo note : notesChecked){
             notesToDelete.add(note);
             mDatabase.delete(note);
         }
+
     }
 }

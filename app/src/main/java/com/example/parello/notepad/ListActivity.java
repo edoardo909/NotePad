@@ -39,22 +39,18 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
         getMenuInflater().inflate(R.menu.menu_list, menu);
         return true;
     }
-//    @Override
-//    public boolean onPrepareOptionsMenu (Menu menu) {
-//        if (!isLargeScreen() && getFragmentManager().getBackStackEntryCount()==0 ) {
-//            menu.findItem(R.id.save_note).setVisible(false);
-//        }
-//        return true; //TODO farlo funzionare
-//    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.add_note:
                 emptyNotesFragment();
                 return true;
             case R.id.save_note:
                     noteSaveAction();
+                if(isLargeScreen()) {
+                    refreshListFragment();
+                }
                 return true;
             case R.id.delete_note:
                 if (!isLargeScreen()) {
@@ -99,7 +95,6 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
             note.setChecked(false);
         } else {
             super.onBackPressed();
-            note.setChecked(false);
         }
     }
 
@@ -117,7 +112,6 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
                     .replace(R.id.main_content, notesFragment)
                     .addToBackStack(null)
                     .commit();
-
             Toast.makeText(getApplicationContext(),
                                     "Clicked on Note: " + nota.getIdCode() +
                                             " is " + nota.isChecked(),
@@ -140,14 +134,10 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
     }
 
     public void noteChecked(NoteInfo nota){
-
         titleEditor = (EditText)findViewById(R.id.editor_note_title);
         bodyEditor = (EditText)findViewById(R.id.note_body);
-        getFragmentManager().findFragmentById(R.id.list_fragment);
-        NotesFragment notesFragment = NotesFragment.getInstance(nota);
-        note = notesFragment.getArguments().getParcelable("nota");
-        //nota.toggle();
-        nota.setChecked(true);
+        nota.toggle();
+        //nota.setChecked(true);
         Toast.makeText(getApplicationContext(),
                 "checked on Note: " + nota.getIdCode() +
                         " is " + nota.isChecked(),
@@ -167,7 +157,12 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
             getFragmentManager().findFragmentById(R.id.list_fragment);
             NotesFragment notesFragment = NotesFragment.newInstance();
             note = new NoteInfo();
-            notesFragment.resetTextFields();
+            titleEditor = (EditText)findViewById(R.id.editor_note_title);
+            bodyEditor = (EditText)findViewById(R.id.note_body);
+
+            if(notesFragment != null) {
+                resetTextFields();
+            }
             getFragmentManager().beginTransaction().remove(notesFragment);
             getFragmentManager().beginTransaction().add(R.id.note_fragment,notesFragment);
         }
@@ -188,9 +183,8 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
                     public void onClick(DialogInterface dialog,int id) {
                             deleteNotes();
                             refreshListFragment();
-                            notesFragment.resetTextFields();
+                            resetTextFields();
                             Log.i("refresh", "List refreshed");
-
                     }
                 })
                 .setNegativeButton(R.string.no,new DialogInterface.OnClickListener() {
@@ -292,5 +286,13 @@ public class ListActivity extends AppCompatActivity implements NoteSelectedListe
             notesToDelete.add(note);
             mDatabase.delete(note);
         }
+    }
+    public void resetTextFields(){
+        //findViews();
+        if(titleEditor != null && bodyEditor != null) {
+            titleEditor.setText("");
+            bodyEditor.setText("");
+        }
+
     }
 }

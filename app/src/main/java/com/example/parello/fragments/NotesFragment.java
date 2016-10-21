@@ -130,12 +130,7 @@ public class NotesFragment extends Fragment {
         bodyEditor = (EditText)getActivity().findViewById(R.id.note_body);
     }
 
-    public void resetTextFields(){
-        if(titleEditor != null || bodyEditor != null) {
-            titleEditor.setText("");
-            bodyEditor.setText("");
-        }
-    }
+
 
     public boolean checkNoteFields() {
         //String title = titleEditor.getText().toString();
